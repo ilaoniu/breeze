@@ -1,16 +1,18 @@
 {
-    "name": "laravel/breeze",
-    "description": "Minimal Laravel authentication scaffolding with Blade and Tailwind.",
-    "keywords": ["laravel", "auth"],
+    "name": "ilaoniu/breeze",
+    "description": "Minimal Laravel scaffolding with I-UI and Tailwind.",
+    "keywords": [
+        "laravel"
+    ],
     "license": "MIT",
     "support": {
-        "issues": "https://github.com/laravel/breeze/issues",
-        "source": "https://github.com/laravel/breeze"
+        "issues": "https://github.com/ilaoniu/breeze/issues",
+        "source": "https://github.com/ilaoniu/breeze"
     },
     "authors": [
         {
-            "name": "Taylor Otwell",
-            "email": "taylor@laravel.com"
+            "name": "ilaoniu",
+            "email": "ilaoniu@qq.com"
         }
     ],
     "require": {
@@ -22,16 +24,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Laravel\\Breeze\\": "src/"
+            "ILaoniu\\Breeze\\": "src/"
         }
     },
     "extra": {
-        "branch-alias": {
-            "dev-master": "1.x-dev"
-        },
         "laravel": {
             "providers": [
-                "Laravel\\Breeze\\BreezeServiceProvider"
+                "ILaoniu\\Breeze\\BreezeServiceProvider"
             ]
         }
     },

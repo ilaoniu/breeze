@@ -1,32 +1,24 @@
 <?php
 
-namespace Laravel\Breeze\Console;
+namespace ILaoniu\Breeze\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 use RuntimeException;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
 class InstallCommand extends Command
 {
-    use InstallsApiStack, InstallsBladeStack, InstallsInertiaStacks;
+    use InstallsInertiaStacks;
 
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'breeze:install {stack : The development stack that should be installed (blade,react,vue,api)}
-                            {--dark : Indicate that dark mode support should be installed}
-                            {--inertia : Indicate that the Vue Inertia stack should be installed (Deprecated)}
-                            {--pest : Indicate that Pest should be installed}
-                            {--ssr : Indicates if Inertia SSR support should be installed}
-                            {--typescript : Indicates if TypeScript is preferred for the Inertia stack (Experimental)}
+    protected $signature = 'breeze:install
                             {--composer=global : Absolute path to the Composer binary which should be used to install packages}';
 
     /**
@@ -37,90 +29,16 @@ class InstallCommand extends Command
     protected $description = 'Install the Breeze controllers and resources';
 
     /**
-     * The available stacks.
-     *
-     * @var array<int, string>
-     */
-    protected $stacks = ['blade', 'react', 'vue', 'api'];
-
-    /**
      * Execute the console command.
      *
      * @return int|null
      */
     public function handle()
     {
-        if ($this->argument('stack') === 'vue') {
-            return $this->installInertiaVueStack();
-        } elseif ($this->argument('stack') === 'react') {
-            return $this->installInertiaReactStack();
-        } elseif ($this->argument('stack') === 'api') {
-            return $this->installApiStack();
-        } elseif ($this->argument('stack') === 'blade') {
-            return $this->installBladeStack();
-        }
-
-        $this->components->error('Invalid stack. Supported stacks are [blade], [react], [vue], and [api].');
+        
+        $this->installInertiaVueStack();
 
         return 1;
-    }
-
-    /**
-     * Interact with the user to prompt them when the stack argument is missing.
-     *
-     * @param  \Symfony\Component\Console\Input\InputInterface  $input
-     * @param  \Symfony\Component\Console\Output\OutputInterface  $output
-     * @return void
-     */
-    protected function interact(InputInterface $input, OutputInterface $output)
-    {
-        if ($this->argument('stack') === null && $this->option('inertia')) {
-            $input->setArgument('stack', 'vue');
-        }
-
-        if ($this->argument('stack')) {
-            return;
-        }
-
-        $input->setArgument('stack', $this->components->choice('Which stack would you like to install?', $this->stacks));
-
-        $input->setOption('dark', $this->components->confirm('Would you like to install dark mode support?'));
-
-        if (in_array($input->getArgument('stack'), ['vue', 'react'])) {
-            $input->setOption('typescript', $this->components->confirm('Would you like TypeScript support? (Experimental)'));
-
-            $input->setOption('ssr', $this->components->confirm('Would you like to install Inertia SSR support?'));
-        }
-
-        $input->setOption('pest', $this->components->confirm('Would you prefer Pest tests instead of PHPUnit?'));
-    }
-
-    /**
-     * Install Breeze's tests.
-     *
-     * @return bool
-     */
-    protected function installTests()
-    {
-        (new Filesystem)->ensureDirectoryExists(base_path('tests/Feature'));
-
-        $stubStack = $this->argument('stack') === 'api' ? 'api' : 'default';
-
-        if ($this->option('pest')) {
-            $this->removeComposerPackages(['phpunit/phpunit'], true);
-
-            if (! $this->requireComposerPackages(['pestphp/pest:^2.0', 'pestphp/pest-plugin-laravel:^2.0'], true)) {
-                return false;
-            }
-
-            (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/'.$stubStack.'/pest-tests/Feature', base_path('tests/Feature'));
-            (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/'.$stubStack.'/pest-tests/Unit', base_path('tests/Unit'));
-            (new Filesystem)->copy(__DIR__.'/../../stubs/'.$stubStack.'/pest-tests/Pest.php', base_path('tests/Pest.php'));
-        } else {
-            (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/'.$stubStack.'/tests/Feature', base_path('tests/Feature'));
-        }
-
-        return true;
     }
 
     /**
@@ -298,18 +216,5 @@ class InstallCommand extends Command
         $process->run(function ($type, $line) {
             $this->output->write('    '.$line);
         });
-    }
-
-    /**
-     * Remove Tailwind dark classes from the given files.
-     *
-     * @param  \Symfony\Component\Finder\Finder  $finder
-     * @return void
-     */
-    protected function removeDarkClasses(Finder $finder)
-    {
-        foreach ($finder as $file) {
-            file_put_contents($file->getPathname(), preg_replace('/\sdark:[^\s"\']+/', '', $file->getContents()));
-        }
     }
 }
