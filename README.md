@@ -71,7 +71,7 @@ cp -r ~/code/ui/resources/js/i-ui ./resources/js/i-ui
 .
 .
     "sideEffects": [
-        './resources/js/bootstrap.js'
+        "./resources/js/bootstrap.js"
     ],
 .
 .
