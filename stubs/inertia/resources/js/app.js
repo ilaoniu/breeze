@@ -1,6 +1,6 @@
 import "./bootstrap";
 import "../css/app.scss";
-import { createInertiaApp } from "@/i-ui";
+import { createInertiaApp } from "@/i-ui/inertia";
 import { createApp, resolveComponent } from "@/inertia";
 
 createInertiaApp({

@@ -1,5 +1,5 @@
 import { createInertiaApp } from "@/i-ui";
-import createServer from "@/i-ui/inertia/vue/server";
+import createServer from "@/i-ui/inertia/server";
 import { renderToString } from "@vue/server-renderer";
 import { createApp, resolveComponent } from "@/inertia";
 
