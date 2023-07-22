@@ -113,13 +113,7 @@ trait InstallsInertiaStacks
 
         $this->components->info('Installing Node dependencies.');
 
-        if (file_exists(base_path('pnpm-lock.yaml'))) {
-            $this->runCommands(['pnpm install']);
-        } elseif (file_exists(base_path('package-lock.json'))) {
-            $this->runCommands(['npm install']);
-        } else {
-            $this->runCommands(['yarn install']);
-        }
+        $this->runCommands(['pnpm install']);
 
         $this->line('');
         $this->components->info('Breeze scaffolding installed successfully.');
