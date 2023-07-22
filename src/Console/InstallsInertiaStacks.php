@@ -22,6 +22,7 @@ trait InstallsInertiaStacks
         $this->updateNodePackages(function ($packages) {
             return [
                 '@ant-design/colors' => '^7.0.0',
+                '@ctrl/tinycolor' => '^3.6.0',
                 '@floating-ui/dom' => '^1.2.3',
                 '@tiptap/core' => '^2.0.3',
                 '@tiptap/extension-blockquote' => '^2.0.3',
@@ -63,7 +64,7 @@ trait InstallsInertiaStacks
                 'date-fns' => '^2.29.3',
                 'deepmerge' => '^4.3.1',
                 'dnd-core' => '^16.0.1',
-                'laravel-vite-plugin' => '^0.7.4',
+                'laravel-vite-plugin' => '^0.7.8',
                 'lodash-es' => '^4.17.21',
                 'postcss' => '^8.4.21',
                 'qs' => '^6.11.2',
@@ -96,8 +97,8 @@ trait InstallsInertiaStacks
 
         // Tailwind / Vite...
         copy(__DIR__.'/../../stubs/inertia/resources/css/app.scss', resource_path('css/app.scss'));
-        copy(__DIR__.'/../../stubs/inertia/postcss.config.js', base_path('postcss.config.js'));
-        copy(__DIR__.'/../../stubs/inertia/tailwind.config.js', base_path('tailwind.config.js'));
+        copy(__DIR__.'/../../stubs/inertia/postcss.config.cjs', base_path('postcss.config.cjs'));
+        copy(__DIR__.'/../../stubs/inertia/tailwind.config.cjs', base_path('tailwind.config.cjs'));
         copy(__DIR__.'/../../stubs/inertia/vite.config.js', base_path('vite.config.js'));
 
         copy(__DIR__.'/../../stubs/inertia/jsconfig.json', base_path('jsconfig.json'));
