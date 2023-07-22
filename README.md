@@ -12,7 +12,7 @@
 ## 2. 安装
 
 ```
-composer require laravel/breeze --dev
+composer require ilaoniu/breeze --dev
 ```
 
 ## 3. 使用
