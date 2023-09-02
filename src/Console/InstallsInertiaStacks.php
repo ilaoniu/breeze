@@ -62,6 +62,7 @@ trait InstallsInertiaStacks
                 'async-validator' => '^4.2.5',
                 'autoprefixer' => '^10.4.14',
                 'date-fns' => '^2.30.0',
+                'date-fns-tz' => '^2.0.0',
                 'deepmerge' => '^4.3.1',
                 'dnd-core' => '^16.0.1',
                 'laravel-vite-plugin' => '^0.7.8',
