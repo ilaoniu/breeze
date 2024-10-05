@@ -14,7 +14,7 @@ trait InstallsInertiaStacks
     protected function installInertiaVueStack()
     {
         // Install Inertia...
-        if (! $this->requireComposerPackages(['inertiajs/inertia-laravel:^0.6.9', 'tightenco/ziggy:^1.6'])) {
+        if (! $this->requireComposerPackages(['inertiajs/inertia-laravel:^1.0', 'tightenco/ziggy:^2.0'])) {
             return 1;
         }
 
@@ -88,14 +88,18 @@ trait InstallsInertiaStacks
         });
 
         // Middleware...
-        $this->installMiddlewareAfter('SubstituteBindings::class', '\App\Http\Middleware\HandleInertiaRequests::class');
-        $this->installMiddlewareAfter('\App\Http\Middleware\HandleInertiaRequests::class', '\Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class');
+        $this->installMiddleware([
+            '\App\Http\Middleware\HandleInertiaRequests::class',
+            '\Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class',
+        ]);
 
+        (new Filesystem)->ensureDirectoryExists(app_path('Http/Middleware'));
         copy(__DIR__.'/../../stubs/inertia/app/Http/Middleware/HandleInertiaRequests.php', app_path('Http/Middleware/HandleInertiaRequests.php'));
 
         // Views...
         copy(__DIR__.'/../../stubs/inertia/resources/views/app.blade.php', resource_path('views/app.blade.php'));
 
+        @unlink(resource_path('views/welcome.blade.php'));
         // Pages...
         (new Filesystem)->ensureDirectoryExists(resource_path('js/Pages'));
 
@@ -118,7 +122,7 @@ trait InstallsInertiaStacks
         $this->replaceInFile('/node_modules', '/bootstrap/ssr'.PHP_EOL.'/node_modules', base_path('.gitignore'));
         $this->replaceInFile('/public/storage', '/resources/js/ziggy'.PHP_EOL.'/public/storage', base_path('.gitignore'));
 
-        $this->components->info('Installing Node dependencies.');
+        $this->components->info('Installing and building Node dependencies.');
 
         $this->runCommands(['pnpm install']);
 

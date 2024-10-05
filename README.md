@@ -29,6 +29,12 @@ php artisan breeze:install
 cp -r ~/code/ui/resources/js/i-ui ./resources/js/i-ui
 ```
 
+本地项目测试也可使用软链接：
+
+```
+ln -s ~/code/ui/resources/js/i-ui ~/code/project-name/resources/js
+```
+
 ## 4. 注意事项
 
 按需修改 Inertia 中间件，位置 `app/Http/Middleware/HandleInertiaRequests.php`:

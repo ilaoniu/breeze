@@ -4,11 +4,14 @@ namespace ILaoniu\Breeze\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use RuntimeException;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
+#[AsCommand(name: 'breeze:install')]
 class InstallCommand extends Command
 {
     use InstallsInertiaStacks;
@@ -35,46 +38,88 @@ class InstallCommand extends Command
      */
     public function handle()
     {
-        
         $this->installInertiaVueStack();
 
         return 1;
     }
 
     /**
-     * Install the middleware to a group in the application Http Kernel.
+     * Install the given middleware names into the application.
      *
-     * @param  string  $after
-     * @param  string  $name
+     * @param  array|string  $name
      * @param  string  $group
+     * @param  string  $modifier
      * @return void
      */
-    protected function installMiddlewareAfter($after, $name, $group = 'web')
+    protected function installMiddleware($names, $group = 'web', $modifier = 'append')
     {
-        $httpKernel = file_get_contents(app_path('Http/Kernel.php'));
+        $bootstrapApp = file_get_contents(base_path('bootstrap/app.php'));
 
-        $middlewareGroups = Str::before(Str::after($httpKernel, '$middlewareGroups = ['), '];');
-        $middlewareGroup = Str::before(Str::after($middlewareGroups, "'$group' => ["), '],');
+        $names = collect(Arr::wrap($names))
+            ->filter(fn ($name) => ! Str::contains($bootstrapApp, $name))
+            ->whenNotEmpty(function ($names) use ($bootstrapApp, $group, $modifier) {
+                $names = $names->map(fn ($name) => "$name")->implode(','.PHP_EOL.'            ');
 
-        if (! Str::contains($middlewareGroup, $name)) {
-            $modifiedMiddlewareGroup = str_replace(
-                $after.',',
-                $after.','.PHP_EOL.'            '.$name.',',
-                $middlewareGroup,
-            );
+                $bootstrapApp = str_replace(
+                    '->withMiddleware(function (Middleware $middleware) {',
+                    '->withMiddleware(function (Middleware $middleware) {'
+                        .PHP_EOL."        \$middleware->$group($modifier: ["
+                        .PHP_EOL."            $names,"
+                        .PHP_EOL.'        ]);'
+                        .PHP_EOL,
+                    $bootstrapApp,
+                );
 
-            file_put_contents(app_path('Http/Kernel.php'), str_replace(
-                $middlewareGroups,
-                str_replace($middlewareGroup, $modifiedMiddlewareGroup, $middlewareGroups),
-                $httpKernel
-            ));
-        }
+                file_put_contents(base_path('bootstrap/app.php'), $bootstrapApp);
+            });
+    }
+
+    /**
+     * Install the given middleware aliases into the application.
+     *
+     * @param  array  $aliases
+     * @return void
+     */
+    protected function installMiddlewareAliases($aliases)
+    {
+        $bootstrapApp = file_get_contents(base_path('bootstrap/app.php'));
+
+        $aliases = collect($aliases)
+            ->filter(fn ($alias) => ! Str::contains($bootstrapApp, $alias))
+            ->whenNotEmpty(function ($aliases) use ($bootstrapApp) {
+                $aliases = $aliases->map(fn ($name, $alias) => "'$alias' => $name")->implode(','.PHP_EOL.'            ');
+
+                $bootstrapApp = str_replace(
+                    '->withMiddleware(function (Middleware $middleware) {',
+                    '->withMiddleware(function (Middleware $middleware) {'
+                        .PHP_EOL.'        $middleware->alias(['
+                        .PHP_EOL."            $aliases,"
+                        .PHP_EOL.'        ]);'
+                        .PHP_EOL,
+                    $bootstrapApp,
+                );
+
+                file_put_contents(base_path('bootstrap/app.php'), $bootstrapApp);
+            });
+    }
+
+    /**
+     * Determine if the given Composer package is installed.
+     *
+     * @param  string  $package
+     * @return bool
+     */
+    protected function hasComposerPackage($package)
+    {
+        $packages = json_decode(file_get_contents(base_path('composer.json')), true);
+
+        return array_key_exists($package, $packages['require'] ?? [])
+            || array_key_exists($package, $packages['require-dev'] ?? []);
     }
 
     /**
      * Installs the given Composer Packages into the application.
      *
-     * @param  array  $packages
      * @param  bool  $asDev
      * @return bool
      */
@@ -102,7 +147,6 @@ class InstallCommand extends Command
     /**
      * Removes the given Composer Packages from the application.
      *
-     * @param  array  $packages
      * @param  bool  $asDev
      * @return bool
      */
@@ -128,9 +172,8 @@ class InstallCommand extends Command
     }
 
     /**
-     * Update the "package.json" file.
+     * Update the dependencies in the "package.json" file.
      *
-     * @param  callable  $callback
      * @param  bool  $dev
      * @return void
      */
@@ -158,6 +201,29 @@ class InstallCommand extends Command
     }
 
     /**
+     * Update the scripts in the "package.json" file.
+     *
+     * @return void
+     */
+    protected static function updateNodeScripts(callable $callback)
+    {
+        if (! file_exists(base_path('package.json'))) {
+            return;
+        }
+
+        $content = json_decode(file_get_contents(base_path('package.json')), true);
+
+        $content['scripts'] = $callback(
+            array_key_exists('scripts', $content) ? $content['scripts'] : []
+        );
+
+        file_put_contents(
+            base_path('package.json'),
+            json_encode($content, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT).PHP_EOL
+        );
+    }
+
+    /**
      * Delete the "node_modules" directory and remove the associated lock files.
      *
      * @return void
@@ -167,7 +233,10 @@ class InstallCommand extends Command
         tap(new Filesystem, function ($files) {
             $files->deleteDirectory(base_path('node_modules'));
 
+            $files->delete(base_path('pnpm-lock.yaml'));
             $files->delete(base_path('yarn.lock'));
+            $files->delete(base_path('bun.lockb'));
+            $files->delete(base_path('deno.lock'));
             $files->delete(base_path('package-lock.json'));
         });
     }
@@ -192,7 +261,11 @@ class InstallCommand extends Command
      */
     protected function phpBinary()
     {
-        return (new PhpExecutableFinder())->find(false) ?: 'php';
+        if (function_exists('Illuminate\Support\php_binary')) {
+            return \Illuminate\Support\php_binary();
+        }
+
+        return (new PhpExecutableFinder)->find(false) ?: 'php';
     }
 
     /**
