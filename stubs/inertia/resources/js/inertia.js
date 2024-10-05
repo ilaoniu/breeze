@@ -1,6 +1,6 @@
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { createSSRApp, h } from "vue";
-import { ZiggyVue } from "ziggy";
+import { ZiggyVue } from "ziggy-js";
 import { Ziggy } from "@/ziggy/ziggy";
 
 export async function resolveComponent(name) {

@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig } from "ilaoniu-vite";
 import laravel from "laravel-vite-plugin";
 import vue from "@vitejs/plugin-vue";
 import { watch } from "vite-plugin-watch";
@@ -6,7 +6,8 @@ import { watch } from "vite-plugin-watch";
 export default defineConfig({
     resolve: {
         alias: {
-            ziggy: "/vendor/tightenco/ziggy/dist/vue.es.js"
+            ziggy: "/vendor/tightenco/ziggy/dist/vue.es.js",
+            highlight: "/node_modules/highlight.js/es"
         }
     },
     plugins: [
