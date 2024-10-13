@@ -31,8 +31,16 @@ cp -r ~/code/ui/resources/js/i-ui ./resources/js/i-ui
 
 本地项目测试也可使用软链接：
 
+### Linux/macOS
+
 ```
 ln -s ~/code/ui/resources/js/i-ui ~/code/project-name/resources/js
+```
+
+### Windows
+
+```
+mklink /J C:\Users\ilaoniu\code\project-name\resources\js\i-ui C:\Users\ilaoniu\code\i-ui\resources\js\i-ui
 ```
 
 ## 4. 注意事项
