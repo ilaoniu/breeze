@@ -1,5 +1,5 @@
 import "./bootstrap";
-import "../css/app.scss";
+import "../css/app.css";
 import { createInertiaApp } from "@/i-ui/inertia";
 import { createApp, resolveComponent } from "@/inertia";
 

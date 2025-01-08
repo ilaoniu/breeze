@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 use Inertia\Middleware;
 
@@ -40,7 +39,7 @@ class HandleInertiaRequests extends Middleware
         return array_merge(parent::share($request), [
             'app' => [
                 'name' => config('app.name'),
-                'current_route_name' => Route::currentRouteName(),
+                'base_url' => config('app.url'),
                 'current_url' => URL::full(),
                 'time' => now(),
             ],

@@ -1,4 +1,5 @@
-import { defineConfig } from "ilaoniu-vite";
+import { defineConfig } from "vite";
+import tailwindcss from "@tailwindcss/vite";
 import laravel from "laravel-vite-plugin";
 import vue from "@vitejs/plugin-vue";
 import { watch } from "vite-plugin-watch";
@@ -11,6 +12,7 @@ export default defineConfig({
         }
     },
     plugins: [
+        tailwindcss(),
         laravel({
             input: "resources/js/app.js",
             ssr: "resources/js/ssr.js",
