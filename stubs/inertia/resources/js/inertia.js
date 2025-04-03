@@ -1,10 +1,13 @@
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { createSSRApp, h } from "vue";
-import { ZiggyVue } from "ziggy-js";
+import { ZiggyVue } from "@/i-ui/ziggy";
 import { Ziggy } from "@/ziggy/ziggy";
 
 export async function resolveComponent(name) {
-    const module = await resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob("./Pages/**/*.vue"));
+    const module = await resolvePageComponent(
+        `./Pages/${name}.vue`,
+        import.meta.glob("./Pages/**/*.vue", { eager: true })
+    );
     const page = module.default;
     return page;
 }
