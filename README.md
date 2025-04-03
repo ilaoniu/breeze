@@ -74,6 +74,25 @@ mklink /J C:\Users\ilaoniu\code\project-name\resources\js\i-ui C:\Users\ilaoniu\
 .
 ```
 
+如果使用了 CDN，静态资源版本控制要修改为本地，否则可能不刷新：
+
+```
+.
+.
+.
+    public function version(Request $request): ?string
+    {
+        if (file_exists($manifest = public_path('build/manifest.json'))) {
+            return md5_file($manifest);
+        }
+
+        return null;
+    }
+.
+.
+.
+```
+
 ## 5. 打包 tree-shaking
 
 可根据需要在 `package.json` 中添加 `sideEffects` 自动移除未使用代码。（一般不需要）
