@@ -7,7 +7,7 @@ import { watch } from "vite-plugin-watch";
 export default defineConfig({
     resolve: {
         alias: {
-            ziggy: "/vendor/tightenco/ziggy/dist/vue.es.js",
+            ziggy: "/vendor/tightenco/ziggy",
             highlight: "/node_modules/highlight.js/es"
         }
     },
