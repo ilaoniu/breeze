@@ -43,10 +43,6 @@ class HandleInertiaRequests extends Middleware
                 'current_url' => URL::full(),
                 'time' => now(),
             ],
-            'flash' => [
-                'success' => session('success'),
-                'error' => session('error'),
-            ],
         ]);
     }
 }
