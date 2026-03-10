@@ -62,7 +62,6 @@ trait InstallsInertiaStacks
                 'laravel-vite-plugin' => '^2.1.0',
                 'lodash-es' => '^4.17.23',
                 'lowlight' => '^3.3.0',
-                'qs' => '^6.15.0',
                 'react-dnd-html5-backend' => '^16.0.1',
                 'react-dnd-touch-backend' => '^16.0.1',
                 'tailwindcss' => '^4.2.1',
