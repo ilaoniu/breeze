@@ -2,11 +2,11 @@
 
 用于快速集成 I-UI, 安装列表如下：
 
--   [I-UI](https://ui.ilaoniu.cn)
--   [Inertia 3](https://inertiajs.com/)
--   [Vue 3](https://vuejs.org/)
--   [Tailwind CSS 4](https://tailwindcss.com/)
--   [Ziggy](https://github.com/tighten/ziggy)
+- [I-UI](https://ui.ilaoniu.cn)
+- [Inertia 3](https://inertiajs.com/)
+- [Vue 3](https://vuejs.org/)
+- [Tailwind CSS 4](https://tailwindcss.com/)
+- [Ziggy](https://github.com/tighten/ziggy)
 
 ## 2. 安装
 
@@ -89,24 +89,6 @@ mklink /J C:\Users\ilaoniu\code\project-name\resources\js\i-ui C:\Users\ilaoniu\
 
         return null;
     }
-.
-.
-.
-```
-
-## 5. 打包 tree-shaking
-
-可根据需要在 `package.json` 中添加 `sideEffects` 自动移除未使用代码。（一般不需要）
-
-示例：
-
-```
-.
-.
-.
-    "sideEffects": [
-        "./resources/js/bootstrap.js"
-    ],
 .
 .
 .
