@@ -3,7 +3,7 @@
 用于快速集成 I-UI, 安装列表如下：
 
 -   [I-UI](https://ui.ilaoniu.cn)
--   [Inertia 2](https://inertiajs.com/)
+-   [Inertia 3](https://inertiajs.com/)
 -   [Vue 3](https://vuejs.org/)
 -   [Tailwind CSS 4](https://tailwindcss.com/)
 -   [Ziggy](https://github.com/tighten/ziggy)
@@ -52,7 +52,8 @@ mklink /J C:\Users\ilaoniu\code\project-name\resources\js\i-ui C:\Users\ilaoniu\
 .
     public function share(Request $request): array
     {
-        return array_merge(parent::share($request), [
+        return [
+            ...parent::share($request),
             'app' => [
                 'name' => config('app.name'),
                 'base_url' => config('app.url'),
@@ -67,7 +68,7 @@ mklink /J C:\Users\ilaoniu\code\project-name\resources\js\i-ui C:\Users\ilaoniu\
                 'success' => session('success'),
                 'error' => session('error'),
             ]
-        ]);
+        ];
     }
 .
 .

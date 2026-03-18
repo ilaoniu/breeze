@@ -14,7 +14,7 @@ trait InstallsInertiaStacks
     protected function installInertiaVueStack()
     {
         // Install Inertia...
-        if (! $this->requireComposerPackages(['inertiajs/inertia-laravel:^2.0', 'tightenco/ziggy:^2.4'])) {
+        if (! $this->requireComposerPackages(['inertiajs/inertia-laravel:^3.0.0-beta3', 'tightenco/ziggy:^2.4'])) {
             return 1;
         }
 
@@ -24,7 +24,8 @@ trait InstallsInertiaStacks
                 '@ant-design/colors' => '^7.2.1',
                 '@ctrl/tinycolor' => '^3.6.1',
                 '@floating-ui/dom' => '^1.7.6',
-                '@inertiajs/vue3' => '^2.3.17',
+                '@inertiajs/vite' => '3.0.0-beta.3',
+                '@inertiajs/vue3' => '3.0.0-beta.3',
                 '@tailwindcss/vite' => '4.2.1',
                 '@tiptap/core' => '^3.20.1',
                 '@tiptap/extension-blockquote' => '^3.20.1',
@@ -103,7 +104,6 @@ trait InstallsInertiaStacks
         copy(__DIR__.'/../../stubs/inertia/resources/js/inertia.js', resource_path('js/inertia.js'));
 
         // ssr
-        copy(__DIR__.'/../../stubs/inertia/resources/js/ssr.js', resource_path('js/ssr.js'));
         $this->replaceInFile('"dev": "vite"', '"dev": "php artisan ziggy:generate ./resources/js/ziggy/ziggy.js && vite"', base_path('package.json'));
         $this->replaceInFile('vite build', 'php artisan ziggy:generate ./resources/js/ziggy/ziggy.js && vite build && vite build --ssr', base_path('package.json'));
         $this->replaceInFile('/node_modules', '/bootstrap/ssr'.PHP_EOL.'/node_modules', base_path('.gitignore'));

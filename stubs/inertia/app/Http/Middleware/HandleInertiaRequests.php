@@ -36,13 +36,14 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        return array_merge(parent::share($request), [
+        return [
+            ...parent::share($request),
             'app' => [
                 'name' => config('app.name'),
                 'base_url' => config('app.url'),
                 'current_url' => URL::full(),
                 'time' => now(),
             ],
-        ]);
+        ];
     }
 }
