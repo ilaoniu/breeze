@@ -14,7 +14,7 @@ export default defineConfig(({ isSsrBuild }) => {
         },
         plugins: [
             laravel({
-                input: "resources/js/app.js",
+                input: ["resources/js/app.js"],
                 refresh: true
             }),
             inertia(),
@@ -37,7 +37,7 @@ export default defineConfig(({ isSsrBuild }) => {
             rollupOptions: {
                 output: isSsrBuild
                     ? {
-                          inlineDynamicImports: true
+                          codeSplitting: false
                       }
                     : {}
             }

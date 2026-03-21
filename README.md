@@ -93,3 +93,21 @@ mklink /J C:\Users\ilaoniu\code\project-name\resources\js\i-ui C:\Users\ilaoniu\
 .
 .
 ```
+
+## 5. 打包 tree-shaking
+
+可根据需要在 `package.json` 中添加 `sideEffects` 自动移除未使用代码。（一般不需要）
+
+示例：
+
+```
+.
+.
+.
+    "sideEffects": [
+        "./resources/js/app.js"
+    ],
+.
+.
+.
+```
