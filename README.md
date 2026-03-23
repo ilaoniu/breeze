@@ -63,10 +63,6 @@ mklink /J C:\Users\ilaoniu\code\project-name\resources\js\i-ui C:\Users\ilaoniu\
             ],
             'auth' => [
                 'user' => \Auth::user(),
-            ],
-            'flash' => [
-                'success' => session('success'),
-                'error' => session('error'),
             ]
         ];
     }
