@@ -42,6 +42,13 @@ ln -s ~/code/ui/resources/js/i-ui ~/code/project-name/resources/js
 mklink /J C:\Users\ilaoniu\code\project-name\resources\js\i-ui C:\Users\ilaoniu\code\i-ui\resources\js\i-ui
 ```
 
+在 `.env` 中按需调整 Inertia SSR 相关环境变量：
+
+```
+INERTIA_SSR_PORT=13714
+INERTIA_SSR_URL="http://127.0.0.1:${INERTIA_SSR_PORT}"
+```
+
 ## 4. 注意事项
 
 按需修改 Inertia 中间件，位置 `app/Http/Middleware/HandleInertiaRequests.php`:

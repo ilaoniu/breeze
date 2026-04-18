@@ -50,6 +50,7 @@ trait InstallsInertiaStacks
                 '@tiptap/extension-text-style' => '^3.22.3',
                 '@tiptap/extension-underline' => '^3.22.3',
                 '@tiptap/extensions' => '^3.22.3',
+                '@tiptap/markdown' => '^3.22.3',
                 '@tiptap/pm' => '^3.22.3',
                 '@tiptap/vue-3' => '^3.22.3',
                 '@vitejs/plugin-vue' => '^6.0.6',
@@ -81,6 +82,15 @@ trait InstallsInertiaStacks
 
         (new Filesystem)->ensureDirectoryExists(app_path('Http/Middleware'));
         copy(__DIR__.'/../../stubs/inertia/app/Http/Middleware/HandleInertiaRequests.php', app_path('Http/Middleware/HandleInertiaRequests.php'));
+
+        // Env variables
+        $content = implode(PHP_EOL, [
+            '',
+            'INERTIA_SSR_PORT=13714',
+            'INERTIA_SSR_URL="http://127.0.0.1:${INERTIA_SSR_PORT}"',
+        ]);
+        (new Filesystem)->append(base_path('.env'), $content);
+        (new Filesystem)->append(base_path('.env.example'), $content);
 
         // Views...
         copy(__DIR__.'/../../stubs/inertia/resources/views/app.blade.php', resource_path('views/app.blade.php'));
